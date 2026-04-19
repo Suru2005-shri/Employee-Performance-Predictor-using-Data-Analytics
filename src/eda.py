@@ -29,7 +29,7 @@ OUT    = '../images'
 os.makedirs(OUT, exist_ok=True)
 
 
-def load(path='../data/hr_dataset.csv'):
+def load(path='data/hr_dataset.csv'):
     return pd.read_csv(path)
 
 
