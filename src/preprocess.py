@@ -11,6 +11,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 import pickle
 import os
+from sklearn.preprocessing import StandardScaler
 
 
 def load_data(path='../data/hr_dataset.csv'):
@@ -55,7 +56,7 @@ def feature_engineer(df):
     print("✅ Feature engineering done")
     return df
 
-
+    
 def encode_and_scale(df):
     """Encode categoricals, scale numerics, return arrays + encoders."""
 
@@ -66,46 +67,49 @@ def encode_and_scale(df):
     X = df.drop(columns=drop_cols)
     y = df['performance_label']
 
-    # Label-encode target
+    # Encode target
+    from sklearn.preprocessing import LabelEncoder, StandardScaler
     le_target = LabelEncoder()
-    y_encoded = le_target.fit_transform(y)  # High=0, Low=1, Medium=2
+    y_encoded = le_target.fit_transform(y)
 
     # Encode categorical features
     cat_cols = ['gender', 'education', 'department']
-    le_dict  = {}
+    le_dict = {}
+
     for col in cat_cols:
         le = LabelEncoder()
         X[col] = le.fit_transform(X[col])
         le_dict[col] = le
 
-    # Scale numeric features
+    # Scale features
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
-    # Save encoders + scaler
-    os.makedirs('../models', exist_ok=True)
-    pickle.dump(le_target, open('../models/le_target.pkl', 'wb'))
-    pickle.dump(le_dict,   open('../models/le_dict.pkl',   'wb'))
-    pickle.dump(scaler,    open('../models/scaler.pkl',    'wb'))
-    pickle.dump(list(X.columns), open('../models/feature_names.pkl', 'wb'))
-
     print(f"✅ Encoding done. Classes: {le_target.classes_}")
-    return X_scaled, y_encoded, le_target, list(X.columns)
+
+    return X_scaled, y_encoded, scaler, le_target, le_dict, list(X.columns)
 
 
-def get_train_test(path='../data/hr_dataset.csv'):
+def get_train_test(path='data/hr_dataset.csv'):
     """Full pipeline: load → clean → engineer → encode → split."""
+
     df = load_data(path)
     df = clean_data(df)
     df = feature_engineer(df)
-    X, y, le_target, feature_names = encode_and_scale(df)
+
+    # Already returns scaled data + everything
+    X, y, scaler, le_target, le_dict, feature_names = encode_and_scale(df)
+
+    # ONLY split (no re-scaling, no column extraction)
+    from sklearn.model_selection import train_test_split
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
     )
-    print(f"✅ Train: {X_train.shape} | Test: {X_test.shape}")
-    return X_train, X_test, y_train, y_test, le_target, feature_names
 
+    print(f"✅ Train: {X_train.shape} | Test: {X_test.shape}")
+
+    return X_train, X_test, y_train, y_test, scaler, le_target, le_dict, feature_names
 
 if __name__ == '__main__':
     get_train_test()
