@@ -4,12 +4,12 @@ app.py  —  Employee Performance Predictor | Streamlit Dashboard
 Run with:  streamlit run app.py
 
 Features:
-  1. 📊 Analytics Dashboard   – live charts from the dataset
-  2. 🔮 Single Prediction     – predict one employee's performance
-  3. 📁 Batch Prediction      – upload CSV, download results
-  4. 📈 Model Comparison      – compare all trained models
-  5. 🤖 What-If Simulator     – drag sliders to see how changes affect prediction
-  6. 💡 HR Insights           – department-level KPI drill-down
+  1.  Analytics Dashboard   – live charts from the dataset
+  2.  Single Prediction     – predict one employee's performance
+  3.  Batch Prediction      – upload CSV, download results
+  4.  Model Comparison      – compare all trained models
+  5.  What-If Simulator     – drag sliders to see how changes affect prediction
+  6.  HR Insights           – department-level KPI drill-down
 """
 
 import streamlit as st
@@ -28,7 +28,7 @@ from plotly.subplots import make_subplots
 # ─── Page Config ────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Employee Performance Predictor",
-    page_icon="🎯",
+    # page_icon="",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -133,63 +133,63 @@ def predict_employee(emp_dict):
 
 
 HR_RECS = {
-    'High'  : ["🌟 Fast-track promotion candidate",
-               "🎯 Assign to high-impact strategic projects",
-               "🏆 Nominate for recognition award",
-               "📈 Offer leadership development track"],
-    'Medium': ["📚 Targeted skill-development training",
-               "🤝 Pair with a senior mentor",
-               "🎯 Set clear quarterly OKRs",
-               "💬 Schedule monthly coaching sessions"],
-    'Low'   : ["🚨 Initiate Performance Improvement Plan (PIP)",
-               "🔍 Root-cause 1:1 — workload / burnout?",
-               "📞 Well-being check-in meeting",
-               "🛠 Immediate training & structured support"],
+    'High'  : [" Fast-track promotion candidate",
+               " Assign to high-impact strategic projects",
+               " Nominate for recognition award",
+               " Offer leadership development track"],
+    'Medium': [" Targeted skill-development training",
+               " Pair with a senior mentor",
+               " Set clear quarterly OKRs",
+               " Schedule monthly coaching sessions"],
+    'Low'   : [" Initiate Performance Improvement Plan (PIP)",
+               " Root-cause 1:1 — workload / burnout?",
+               " Well-being check-in meeting",
+               " Immediate training & structured support"],
 }
 
 
 # ─── Sidebar ────────────────────────────────────────────────────────
 with st.sidebar:
     st.image("https://img.icons8.com/fluency/96/null/combo-chart.png", width=64)
-    st.markdown("## 🎯 EPP Dashboard")
+    st.markdown("##  EPP Dashboard")
     st.markdown("*Employee Performance Predictor*")
     st.divider()
     page = st.radio(
         "Navigate",
-        ["📊 Analytics Dashboard",
-         "🔮 Single Prediction",
-         "⚙️ What-If Simulator",
-         "📁 Batch Prediction",
-         "📈 Model Comparison",
-         "💡 HR Insights"],
+        [" Analytics Dashboard",
+         " Single Prediction",
+         " What-If Simulator",
+         " Batch Prediction",
+         " Model Comparison",
+         " HR Insights"],
         label_visibility='collapsed'
     )
     st.divider()
-    st.caption("Built with ❤️ using Scikit-learn + Streamlit")
+    # st.caption("Built with ❤️ using Scikit-learn + Streamlit")
 
 
 # ══════════════════════════════════════════════════════════════════════
 # PAGE 1 — Analytics Dashboard
 # ══════════════════════════════════════════════════════════════════════
-if page == "📊 Analytics Dashboard":
-    st.markdown("# 📊 Analytics Dashboard")
+if page == "Analytics Dashboard":
+    st.markdown("# Analytics Dashboard")
     st.markdown("Live insights from the synthetic HR dataset.")
 
     df = load_dataset()
 
     # KPI Row
     c1, c2, c3, c4, c5 = st.columns(5)
-    c1.metric("👥 Total Employees", f"{len(df):,}")
-    c2.metric("🌟 High Performers",
+    c1.metric(" Total Employees", f"{len(df):,}")
+    c2.metric(" High Performers",
               f"{(df['performance_label']=='High').sum():,}",
               f"{(df['performance_label']=='High').mean()*100:.1f}%")
-    c3.metric("⚡ Medium Performers",
+    c3.metric(" Medium Performers",
               f"{(df['performance_label']=='Medium').sum():,}",
               f"{(df['performance_label']=='Medium').mean()*100:.1f}%")
-    c4.metric("⚠️ Low Performers",
+    c4.metric("Low Performers",
               f"{(df['performance_label']=='Low').sum():,}",
               f"{(df['performance_label']=='Low').mean()*100:.1f}%")
-    c5.metric("💰 Avg Salary", f"${df['salary'].mean():,.0f}")
+    c5.metric(" Avg Salary", f"${df['salary'].mean():,.0f}")
     st.divider()
 
     # Row 1: Distribution + Dept breakdown
@@ -250,15 +250,15 @@ if page == "📊 Analytics Dashboard":
 # ══════════════════════════════════════════════════════════════════════
 # PAGE 2 — Single Prediction
 # ══════════════════════════════════════════════════════════════════════
-elif page == "🔮 Single Prediction":
-    st.markdown("# 🔮 Predict Employee Performance")
+elif page == "Single Prediction":
+    st.markdown("#  Predict Employee Performance")
     st.markdown("Fill in the employee details and get an AI-powered performance prediction.")
     st.divider()
 
     col_a, col_b = st.columns(2)
 
     with col_a:
-        st.markdown("#### 👤 Personal Details")
+        st.markdown("####  Personal Details")
         age            = st.slider("Age", 22, 60, 32)
         gender         = st.selectbox("Gender", GEN_LIST)
         education      = st.selectbox("Education Level", EDU_LIST)
@@ -267,7 +267,7 @@ elif page == "🔮 Single Prediction":
         salary         = st.number_input("Salary (USD)", 25000, 200000, 65000, step=1000)
 
     with col_b:
-        st.markdown("#### 📋 Work Metrics")
+        st.markdown("####  Work Metrics")
         training_hrs   = st.slider("Training Hours (this year)", 0, 100, 40)
         projects       = st.slider("Projects Completed", 1, 25, 10)
         monthly_hrs    = st.slider("Avg Monthly Hours", 140, 280, 180)
@@ -277,7 +277,7 @@ elif page == "🔮 Single Prediction":
         peer_score     = st.slider("Peer Review Score (1-5)", 1.0, 5.0, 3.5, 0.1)
         mgr_rating     = st.slider("Manager Rating (1-5)", 1.0, 5.0, 3.8, 0.1)
 
-    if st.button("🚀 Predict Performance", use_container_width=True):
+    if st.button(" Predict Performance", use_container_width=True):
         emp = {
             'age': age, 'gender': gender, 'education': education,
             'department': department, 'experience_years': experience,
@@ -320,19 +320,19 @@ elif page == "🔮 Single Prediction":
             st.plotly_chart(fig, use_container_width=True)
 
             # HR Recommendations
-            st.markdown("#### 💼 HR Recommendations")
+            st.markdown("#### HR Recommendations")
             for rec in HR_RECS[label]:
                 st.markdown(f"<div class='rec-item'>{rec}</div>", unsafe_allow_html=True)
 
         except Exception as e:
-            st.error(f"❌ Model not found. Please run `python src/train_model.py` first.\n\nError: {e}")
+            st.error(f" Model not found. Please run `python src/train_model.py` first.\n\nError: {e}")
 
 
 # ══════════════════════════════════════════════════════════════════════
 # PAGE 3 — What-If Simulator
 # ══════════════════════════════════════════════════════════════════════
-elif page == "⚙️ What-If Simulator":
-    st.markdown("# ⚙️ What-If Simulator")
+elif page == "What-If Simulator":
+    st.markdown("#  What-If Simulator")
     st.markdown(
         "Adjust levers to see how HR interventions would change an employee's predicted performance."
     )
@@ -367,7 +367,7 @@ elif page == "⚙️ What-If Simulator":
         pr_after = st.slider("Peer Score (after)", 1.0, 5.0, 4.2, 0.1, key="pr_a")
         mr_after = st.slider("Manager Rating (after)", 1.0, 5.0, 4.5, 0.1, key="mr_a")
 
-    if st.button("🔄 Run Comparison", use_container_width=True):
+    if st.button("Run Comparison", use_container_width=True):
         base = dict(age=age, gender=gender, education=education, department=department,
                     experience_years=experience, salary=salary, last_promotion_years=2,
                     avg_monthly_hours=180)
@@ -398,7 +398,7 @@ elif page == "⚙️ What-If Simulator":
                     <p style='color:white'>Confidence: {c_a}%</p>
                 </div>""", unsafe_allow_html=True)
 
-            arrow = "⬆️ Improved" if l_a != l_b else ("✅ Same Level" if l_a == l_b else "⬇️ Declined")
+            arrow = "Improved" if l_a != l_b else ("Same Level" if l_a == l_b else " Declined")
             st.success(f"**Impact:** {arrow}  |  {l_b} → {l_a}")
 
         except Exception as e:
@@ -408,8 +408,8 @@ elif page == "⚙️ What-If Simulator":
 # ══════════════════════════════════════════════════════════════════════
 # PAGE 4 — Batch Prediction
 # ══════════════════════════════════════════════════════════════════════
-elif page == "📁 Batch Prediction":
-    st.markdown("# 📁 Batch Prediction")
+elif page == " Batch Prediction":
+    st.markdown("#  Batch Prediction")
     st.markdown("Upload a CSV with employee data and download predictions for all rows.")
     st.divider()
 
@@ -426,7 +426,7 @@ elif page == "📁 Batch Prediction":
         st.markdown(f"**Preview:** {len(df_up)} rows")
         st.dataframe(df_up.head(), use_container_width=True)
 
-        if st.button("⚡ Run Batch Prediction"):
+        if st.button(" Run Batch Prediction"):
             try:
                 model, scaler, le_target, le_dict, features = load_model_artifacts()
                 df_proc = df_up.copy()
@@ -442,7 +442,7 @@ elif page == "📁 Batch Prediction":
                 df_up['Predicted_Performance'] = preds
                 df_up['Confidence_%']          = confs
 
-                st.success(f"✅ Done! {len(df_up)} predictions made.")
+                st.success(f" Done! {len(df_up)} predictions made.")
                 st.dataframe(df_up, use_container_width=True)
 
                 # Distribution
@@ -454,7 +454,7 @@ elif page == "📁 Batch Prediction":
 
                 # Download
                 csv = df_up.to_csv(index=False).encode()
-                st.download_button("⬇️ Download Results CSV", csv,
+                st.download_button("Download Results CSV", csv,
                                    "batch_predictions.csv", "text/csv")
             except Exception as e:
                 st.error(f"Error: {e}")
@@ -463,8 +463,8 @@ elif page == "📁 Batch Prediction":
 # ══════════════════════════════════════════════════════════════════════
 # PAGE 5 — Model Comparison
 # ══════════════════════════════════════════════════════════════════════
-elif page == "📈 Model Comparison":
-    st.markdown("# 📈 Model Comparison")
+elif page == " Model Comparison":
+    st.markdown("# Model Comparison")
     comp_path = f'{OUT}/model_comparison.csv'
     meta_path = f'{OUT}/model_metadata.json'
     fi_path   = f'{OUT}/feature_importance.csv'
@@ -473,7 +473,7 @@ elif page == "📈 Model Comparison":
         df_comp = pd.read_csv(comp_path)
         meta    = json.load(open(meta_path))
 
-        st.success(f"🏆 Best Model: **{meta['best_model']}** | "
+        st.success(f" Best Model: **{meta['best_model']}** | "
                    f"Accuracy: **{meta['accuracy']*100:.1f}%** | "
                    f"F1: **{meta['f1_score']*100:.1f}%**")
 
@@ -487,7 +487,7 @@ elif page == "📈 Model Comparison":
         st.dataframe(df_comp, use_container_width=True)
 
         if os.path.exists(fi_path):
-            st.markdown("#### 🔑 Feature Importance (Best Model)")
+            st.markdown("####  Feature Importance (Best Model)")
             fi = pd.read_csv(fi_path).head(12).sort_values('Importance')
             fig2 = px.bar(fi, x='Importance', y='Feature', orientation='h',
                           color='Importance', color_continuous_scale='Plasma',
@@ -500,8 +500,8 @@ elif page == "📈 Model Comparison":
 # ══════════════════════════════════════════════════════════════════════
 # PAGE 6 — HR Insights
 # ══════════════════════════════════════════════════════════════════════
-elif page == "💡 HR Insights":
-    st.markdown("# 💡 HR Strategic Insights")
+elif page == " HR Insights":
+    st.markdown("# HR Strategic Insights")
     df = load_dataset()
 
     dept_sel = st.multiselect("Filter by Department", DEPT_LIST, default=DEPT_LIST)
@@ -532,5 +532,5 @@ elif page == "💡 HR Insights":
     ][['employee_id', 'department', 'satisfaction_score', 'absenteeism_days',
        'performance_label']].sort_values('satisfaction_score')
     st.dataframe(risk.reset_index(drop=True), use_container_width=True)
-    st.metric("🚨 At-Risk Employees", len(risk),
+    st.metric(" At-Risk Employees", len(risk),
               f"{len(risk)/len(df_f)*100:.1f}% of filtered workforce")
