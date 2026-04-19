@@ -1,10 +1,10 @@
-# 🎯 Employee Performance Predictor using Data Analytics
+#  Employee Performance Predictor using Data Analytics
 
 > An end-to-end Machine Learning project that predicts employee performance levels — **High / Medium / Low** — using synthetic HR data, multiple ML models, and a live interactive Streamlit dashboard.
 
 ---
 
-## 📌 Problem Statement
+##  Problem Statement
 
 HR departments in large organizations struggle to:
 - Identify high-performing employees for promotion
@@ -15,7 +15,7 @@ This project provides a **data-driven AI solution** to solve all three challenge
 
 ---
 
-## 💼 Business Value
+##  Business Value
 
 | Stakeholder | Benefit |
 |---|---|
@@ -26,7 +26,7 @@ This project provides a **data-driven AI solution** to solve all three challenge
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Category | Tools |
 |---|---|
@@ -39,7 +39,7 @@ This project provides a **data-driven AI solution** to solve all three challenge
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 Employee HR Data (Synthetic)
@@ -88,7 +88,7 @@ Employee HR Data (Synthetic)
 
 ---
 
-## 📁 Folder Structure
+##  Folder Structure
 
 ```
 Employee-Performance-Predictor/
@@ -119,7 +119,7 @@ Employee-Performance-Predictor/
 │
 ├── images/                     ← EDA charts (PNG)
 │
-├── app.py                      ← 🚀 Streamlit dashboard
+├── app.py                      ←  Streamlit dashboard
 ├── main.py                     ← One-command runner
 ├── requirements.txt
 └── README.md
@@ -127,7 +127,7 @@ Employee-Performance-Predictor/
 
 ---
 
-## 🚀 How to Run
+##  How to Run
 
 ### 1. Clone the Repository
 ```bash
@@ -178,20 +178,20 @@ streamlit run app.py
 
 ---
 
-## 🎛️ Dashboard Features
+##  Dashboard Features
 
 | Page | Description |
 |---|---|
-| 📊 Analytics | Live charts — distributions, heatmaps, dept breakdowns |
-| 🔮 Single Prediction | Fill form → get AI prediction + HR recommendations |
-| ⚙️ What-If Simulator | Drag sliders → see impact of HR interventions |
-| 📁 Batch Prediction | Upload CSV → download predictions for all employees |
-| 📈 Model Comparison | Compare all 5 models + feature importance chart |
-| 💡 HR Insights | Drill down by department, spot at-risk employees |
+|  Analytics | Live charts — distributions, heatmaps, dept breakdowns |
+|  Single Prediction | Fill form → get AI prediction + HR recommendations |
+|  What-If Simulator | Drag sliders → see impact of HR interventions |
+|  Batch Prediction | Upload CSV → download predictions for all employees |
+|  Model Comparison | Compare all 5 models + feature importance chart |
+|  HR Insights | Drill down by department, spot at-risk employees |
 
 ---
 
-## 🧪 Sample Prediction
+##  Sample Prediction
 
 ```python
 employee = {
@@ -204,34 +204,21 @@ employee = {
 # Output:
 # Predicted: High Performer
 # Confidence: 91.3%
-# Recommendations: 🌟 Fast-track promotion candidate
+# Recommendations:  Fast-track promotion candidate
 ```
 
 ---
 
-## 📈 Key Insights Discovered
+##  Key Insights Discovered
 
 - Employees with **60+ training hours** are 3× more likely to be high performers
 - **Satisfaction score < 2.5** is the strongest predictor of low performance
 - **Absenteeism > 18 days** correlates with 78% probability of low performance
 - **Engineering & Finance** departments have the highest share of high performers
 
----
-
-## 🎓 Interview Talking Points
-
-1. **Why Random Forest / Gradient Boosting?** → Handles non-linearity, feature interactions, robust to outliers
-2. **Feature Engineering?** → Created productivity_ratio, engagement_score, career_pace
-3. **Class Imbalance?** → Used stratified splits; F1-score reported alongside accuracy
-4. **Deployment?** → Streamlit for rapid prototyping; production-ready with FastAPI + Docker
-5. **Data Privacy?** → Fully synthetic data; real implementation uses anonymized HRIS exports
 
 ---
 
-## 🏷️ Tags
+##  Tags
 `machine-learning` `hr-analytics` `employee-performance` `data-science` `python` `streamlit` `random-forest` `classification` `synthetic-data` `portfolio-project`
 
----
-
-## 👤 Author
-Built as a portfolio/placement project demonstrating end-to-end ML engineering.
