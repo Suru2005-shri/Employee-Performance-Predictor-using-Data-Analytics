@@ -78,23 +78,25 @@ def detailed_report(model, X_test, y_test, le_target, model_name):
     return report, cm
 
 
-def save_best_model(model, model_name, df_results):
-    """Pickle the best model + save comparison results."""
-    os.makedirs('../models', exist_ok=True)
-    pickle.dump(model, open('../models/best_model.pkl', 'wb'))
-    df_results.to_csv('../outputs/model_comparison.csv', index=False)
-    
-    # Save model metadata
-    meta = {
-        'best_model'  : model_name,
-        'accuracy'    : float(df_results.iloc[0]['Accuracy']),
-        'f1_score'    : float(df_results.iloc[0]['F1_Score']),
-        'all_results' : df_results.to_dict('records')
-    }
-    with open('../outputs/model_metadata.json', 'w') as f:
-        json.dump(meta, f, indent=2)
+def save_best_model(best_model, best_name, df_results, scaler, le_target, le_dict, feat_names):
+    import os
+    import pickle
 
-    print(f"✅ Best model saved: models/best_model.pkl")
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    model_path = os.path.join(BASE_DIR, "models")
+
+    os.makedirs(model_path, exist_ok=True)
+
+    # Save model
+    pickle.dump(best_model, open(os.path.join(model_path, "best_model.pkl"), 'wb'))
+
+    # Save preprocessing artifacts
+    pickle.dump(scaler, open(os.path.join(model_path, "scaler.pkl"), 'wb'))
+    pickle.dump(le_target, open(os.path.join(model_path, "le_target.pkl"), 'wb'))
+    pickle.dump(le_dict, open(os.path.join(model_path, "le_dict.pkl"), 'wb'))
+    pickle.dump(feat_names, open(os.path.join(model_path, "feature_names.pkl"), 'wb'))
+
+    print("✅ All model artifacts saved in models/")
 
 
 def get_feature_importance(model, feature_names, model_name):
@@ -116,7 +118,7 @@ if __name__ == '__main__':
     print("  EMPLOYEE PERFORMANCE PREDICTOR — MODEL TRAINING")
     print("=" * 55)
 
-    X_train, X_test, y_train, y_test, le_target, feat_names = get_train_test()
+    X_train, X_test, y_train, y_test, scaler, le_target, le_dict, feat_names = get_train_test()
 
     print("\n[1] Training models...")
     fitted = train_all_models(X_train, y_train)
