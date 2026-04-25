@@ -332,3 +332,4 @@ pytest tests/ -v
 | Live prediction      | 5     |
 | Config integrity     | 5     |
 images/01_performance_distribution.png
+https://github.com/Suru2005-shri/Employee-Performance-Predictor-using-Data-Analytics/blob/2e15b544620f5be37aa6777e42238a88c84b7225/images/02_dept_performance.png
