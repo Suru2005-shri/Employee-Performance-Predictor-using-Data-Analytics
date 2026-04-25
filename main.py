@@ -1,110 +1,109 @@
 """
-main.py
--------
-One-command runner — executes all 6 phases end-to-end.
+main.py — Scalable One-Command Runner
+=======================================
+Runs all phases using the new Pipeline architecture.
 
 Usage:
-    python main.py
+    python main.py           # standard run
+    python main.py --tune    # with GridSearchCV tuning (slower)
+    python main.py --test    # also run pytest after training
 """
 
-import os
-import sys
+import os, sys, argparse
 
-# ── Add src/ to sys.path BEFORE any local imports ────────────────────
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-SRC_DIR  = os.path.join(ROOT_DIR, 'src')
-for p in [SRC_DIR, ROOT_DIR]:
+ROOT   = os.path.dirname(os.path.abspath(__file__))
+SRC    = os.path.join(ROOT, "src")
+for p in [SRC, ROOT]:
     if p not in sys.path:
         sys.path.insert(0, p)
 
-# ── Now import from src/ directly (no 'src.' prefix) ─────────────────
+from config import CFG, ensure_dirs
 from generate_data import generate_hr_dataset
-from preprocess    import get_train_test
-from train_model   import (
-    train_all_models, evaluate_models, detailed_report,
-    save_best_model, get_feature_importance,
-)
+from train_model   import run_training
 from eda           import run_all as run_eda
 from predict       import predict_single
 
-import pandas as pd
-
 
 def banner(text):
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 62)
     print(f"  {text}")
-    print("=" * 60)
+    print("=" * 62)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Employee Performance Predictor")
+    parser.add_argument("--tune",    action="store_true", help="Run GridSearchCV")
+    parser.add_argument("--test",    action="store_true", help="Run pytest after training")
+    parser.add_argument("--samples", type=int, default=CFG.N_SAMPLES,
+                        help=f"Dataset size (default {CFG.N_SAMPLES})")
+    args = parser.parse_args()
 
-    # ── Phase 1: Generate dataset ─────────────────────────────────
+    ensure_dirs()
+
+    # ── Phase 1: Data generation ─────────────────────────────────
     banner("PHASE 1 — Generating Synthetic HR Dataset")
-    data_dir = os.path.join(ROOT_DIR, 'data')
-    os.makedirs(data_dir, exist_ok=True)
+    df = generate_hr_dataset(args.samples)
+    df.to_csv(CFG.DATA_CSV, index=False)
+    print(f"  {args.samples} rows saved → {CFG.DATA_CSV}")
+    print("  " + df["performance_label"].value_counts().to_string().replace("\n", "\n  "))
 
-    df = generate_hr_dataset(1000)
-    csv_path = os.path.join(data_dir, 'hr_dataset.csv')
-    df.to_csv(csv_path, index=False)
-    print(f"  Dataset: {df.shape[0]} rows x {df.shape[1]} cols  ->  '{csv_path}'")
-    print(df['performance_label'].value_counts().to_string())
+    # ── Phase 2: Train ───────────────────────────────────────────
+    banner("PHASE 2 — Training with Cross-Validation")
+    best_pipe, best_name, acc, f1 = run_training(tune=args.tune)
 
-    # ── Phase 2: Preprocess ───────────────────────────────────────
-    banner("PHASE 2 — Preprocessing & Feature Engineering")
-    X_train, X_test, y_train, y_test, le_target, feat_names = get_train_test(csv_path)
-
-    # ── Phase 3: Train ────────────────────────────────────────────
-    banner("PHASE 3 — Training ML Models")
-    fitted = train_all_models(X_train, y_train)
-
-    # ── Phase 4: Evaluate ─────────────────────────────────────────
-    banner("PHASE 4 — Evaluation & Saving")
-    df_results, best_name = evaluate_models(fitted, X_test, y_test, le_target)
-    best_model = fitted[best_name]
-
-    detailed_report(best_model, X_test, y_test, le_target, best_name)
-    get_feature_importance(best_model, feat_names, best_name)
-    save_best_model(best_model, best_name, df_results)
-
-    # ── Phase 5: EDA ──────────────────────────────────────────────
-    banner("PHASE 5 — Generating EDA Charts")
+    # ── Phase 3: EDA charts ──────────────────────────────────────
+    banner("PHASE 3 — Generating EDA Charts")
     run_eda()
 
-    # ── Phase 6: Demo prediction ──────────────────────────────────
-    banner("PHASE 6 — Demo Prediction")
+    # ── Phase 4: Demo prediction ─────────────────────────────────
+    banner("PHASE 4 — Demo Prediction (Pipeline)")
     sample = {
-        'age': 34, 'gender': 'Female', 'education': 'Master',
-        'department': 'Engineering', 'experience_years': 10,
-        'salary': 82000, 'training_hours': 70, 'projects_completed': 15,
-        'avg_monthly_hours': 185, 'satisfaction_score': 4.3,
-        'last_promotion_years': 1, 'absenteeism_days': 2,
-        'peer_review_score': 4.4, 'manager_rating': 4.6,
+        "age":34, "gender":"Female", "education":"Master",
+        "department":"Engineering", "experience_years":10,
+        "salary":82000, "training_hours":70, "projects_completed":15,
+        "avg_monthly_hours":185, "satisfaction_score":4.3,
+        "last_promotion_years":1, "absenteeism_days":2,
+        "peer_review_score":4.4, "manager_rating":4.6,
+        "performance_score":0,
     }
     result = predict_single(sample)
-    print(f"  Profile     : Age={sample['age']}, {sample['gender']}, "
-          f"{sample['department']}, {sample['education']}")
-    print(f"  Prediction  : {result['label']}")
-    print(f"  Confidence  : {result['confidence']}%")
+    print(f"  Prediction   : {result['label']}  ({result['confidence']}% confidence)")
+    print(f"  Risk Score   : {result['risk_score']}/10")
     print(f"  Probabilities: {result['probabilities']}")
-    print("  HR Recommendations:")
-    for r in result['recommendations']:
+    print("  Recommendations:")
+    for r in result["recommendations"]:
         print(f"    {r}")
 
-    # ── Done ──────────────────────────────────────────────────────
+    # ── Phase 5: Tests ───────────────────────────────────────────
+    if args.test:
+        banner("PHASE 5 — Running Test Suite")
+        import subprocess
+        result_proc = subprocess.run(
+            [sys.executable, "-m", "pytest", "tests/", "-v", "--tb=short"],
+            cwd=ROOT
+        )
+        if result_proc.returncode != 0:
+            print("  Some tests FAILED — review above output")
+        else:
+            print("  All tests PASSED")
+
     banner("ALL PHASES COMPLETE")
-    print("""
-  Output folders:
-    images/   <- 7 EDA charts (PNG)
-    models/   <- best_model.pkl + encoders + scaler
-    outputs/  <- reports, CSVs, metadata JSONs
+    print(f"""
+  Model       : {best_name}
+  Accuracy    : {acc*100:.1f}%
+  F1 Score    : {f1*100:.1f}%
+  Pipeline    : {CFG.PIPELINE_PKL}
 
   Launch dashboard:
     streamlit run app.py
 
-  GitHub upload:
-    git init
-    git add .
-    git commit -m "feat: Employee Performance Predictor v1.0"
-    git remote add origin https://github.com/YOUR_USERNAME/employee-performance-predictor.git
-    git push -u origin main
+  Serve API (after: pip install fastapi uvicorn):
+    uvicorn src.api:app --host 0.0.0.0 --port 8000
+
+  Run tests:
+    pytest tests/ -v
+
+  GitHub:
+    git add . && git commit -m "feat: scalable pipeline v2.0"
+    git push
     """)
