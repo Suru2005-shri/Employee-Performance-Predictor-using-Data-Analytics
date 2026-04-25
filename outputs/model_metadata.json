@@ -1,0 +1,45 @@
+{
+  "best_model": "Random Forest",
+  "accuracy": 0.792,
+  "f1_score": 0.787,
+  "trained_at": "20260425_080423",
+  "n_cv_folds": 5,
+  "cv_scoring": "f1_weighted",
+  "classes": [
+    "High",
+    "Low",
+    "Medium"
+  ],
+  "all_cv_results": [
+    {
+      "Model": "Random Forest",
+      "CV_Mean_F1": 0.794,
+      "CV_Std_F1": 0.0057,
+      "Time_s": 4.5
+    },
+    {
+      "Model": "Gradient Boosting",
+      "CV_Mean_F1": 0.7828,
+      "CV_Std_F1": 0.0084,
+      "Time_s": 15.5
+    },
+    {
+      "Model": "Logistic Regression",
+      "CV_Mean_F1": 0.7787,
+      "CV_Std_F1": 0.0094,
+      "Time_s": 0.3
+    },
+    {
+      "Model": "SVM",
+      "CV_Mean_F1": 0.7764,
+      "CV_Std_F1": 0.0025,
+      "Time_s": 2.6
+    },
+    {
+      "Model": "KNN",
+      "CV_Mean_F1": 0.7444,
+      "CV_Std_F1": 0.0107,
+      "Time_s": 0.2
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+Model,CV_Mean_F1,CV_Std_F1,Time_s
+Random Forest,0.794,0.0057,4.5
+Gradient Boosting,0.7828,0.0084,15.5
+Logistic Regression,0.7787,0.0094,0.3
+SVM,0.7764,0.0025,2.6
+KNN,0.7444,0.0107,0.2
