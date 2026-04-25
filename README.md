@@ -332,18 +332,3 @@ pytest tests/ -v
 | Live prediction      | 5     |
 | Config integrity     | 5     |
 
----
-
-## GitHub Upload
-
-```bash
-git init
-git add .
-git commit -m "feat: employee performance predictor v2.0 - scalable pipeline"
-git remote add origin https://github.com/YOUR_USERNAME/employee-performance-predictor.git
-git push -u origin main
-```
-
-Recommended repository tags: machine-learning, hr-analytics, scikit-learn, streamlit, fastapi, random-forest, classification, python, portfolio-project
-
----
